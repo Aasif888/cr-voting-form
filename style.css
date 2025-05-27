@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  height: 100vh;
+  background: url('https://cdn.marvel.com/content/1x/avengers_2.jpg') no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.form-container {
+  background: rgba(0, 0, 0, 0.65); /* darker for readability */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  animation: fadeInUp 1s ease forwards;
+  opacity: 0;
+  transform: translateY(40px);
+  color: #fff;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  animation: shineText 2s infinite alternate;
+  text-shadow: 0 0 8px #ff0048;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 600;
+  color: #f0f0f0;
+  text-shadow: 0 0 5px #000;
+}
+
+input[type="text"],
+input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+  transition: 0.3s ease;
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+}
+
+input[type="text"]:focus {
+  box-shadow: 0 0 12px #00f7ff;
+  animation: glowPulse 1s infinite alternate;
+}
+
+input[type="submit"] {
+  background: #ff0048;
+  color: white;
+  margin-top: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.4s ease;
+  box-shadow: 0 0 8px #ff0048;
+}
+
+input[type="submit"]:hover {
+  background: #d9003c;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px #ff0048, 0 0 20px #ff0048 inset;
+}
+
+input[type="radio"] {
+  margin-right: 8px;
+}
+
+#voteCount {
+  margin-top: 15px;
+  font-weight: bold;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 0 0 5px #000;
+  animation: fadeInUp 2s ease;
+}
+
+/* Keyframes for animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  from {
+    box-shadow: 0 0 5px #00f7ff;
+  }
+  to {
+    box-shadow: 0 0 15px #00f7ff;
+  }
+}
+
+@keyframes shineText {
+  from {
+    text-shadow: 0 0 8px #ff0048;
+  }
+  to {
+    text-shadow: 0 0 15px #ffffff, 0 0 25px #ff0048;
+  }
+}

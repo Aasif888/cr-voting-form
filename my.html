@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CR Voting Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Vote for Class Representative</h2>
+
+    <form onsubmit="submitVote(event)">
+      <label for="voterName">Your Name:</label>
+      <input type="text" id="voterName" name="voterName" required placeholder="Enter your full name">
+
+      <label for="rollNo">Roll Number:</label>
+      <input type="text" id="rollNo" name="rollNo" required placeholder="24/A00/000"
+             pattern="24\/[A-Z0-9]{3}\/\d{3}" title="Format: 24/A00/001">
+
+      <p>Select your candidate:</p>
+      <label>
+        <input type="radio" name="cr_vote" value="Aaditya Singhal" required>
+        Aaditya Singhal
+      </label>
+      <label>
+        <input type="radio" name="cr_vote" value="Adarsh">
+        Adarsh
+      </label>
+      <label>
+        <input type="radio" name="cr_vote" value="Other">
+        Other:
+        <input type="text" name="other_candidate" id="otherCandidate" placeholder="Enter name if not listed" disabled>
+      </label>
+
+      <input type="submit" value="Submit Vote">
+      <p id="voteCount">Votes submitted: 0 / 65</p>
+    </form>
+  </div>
+
+<script>
+  const MAX_VOTES = 65;
+  let totalVotes = 0;
+  const votedRollNumbers = new Set();
+
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbwtT-BnTqD9NWPI5Z_-baOY_9nAn6KYIeI2Qnd_nQ7bp9tUX8RM_u0Qiobz77ZD1D2x/exec';
+
+  // Enable/disable "Other" input field dynamically
+  document.querySelectorAll('input[name="cr_vote"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const otherInput = document.getElementById('otherCandidate');
+      if (radio.value === 'Other' && radio.checked) {
+        otherInput.disabled = false;
+        otherInput.required = true;
+      } else {
+        otherInput.disabled = true;
+        otherInput.required = false;
+        otherInput.value = '';
+      }
+    });
+  });
+
+  function submitVote(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('voterName').value.trim();
+    const rollNo = document.getElementById('rollNo').value.trim();
+    const selected = document.querySelector('input[name="cr_vote"]:checked');
+    const other = document.getElementById('otherCandidate').value.trim();
+
+    const rollPattern = /^24\/[A-Z0-9]{3}\/\d{3}$/;
+    if (!rollPattern.test(rollNo)) {
+      alert("Invalid roll number format. Use: 24/A00/001");
+      return;
+    }
+
+    if (!name || !rollNo || !selected) {
+      alert("Please fill all fields and select a candidate.");
+      return;
+    }
+
+    if (votedRollNumbers.has(rollNo)) {
+      alert("This roll number has already voted.");
+      return;
+    }
+
+    if (totalVotes >= MAX_VOTES) {
+      alert("Voting limit reached.");
+      return;
+    }
+
+    let vote = selected.value === 'Other' ? other : selected.value;
+    if (selected.value === 'Other' && !other) {
+      alert("Please enter a name for 'Other' candidate.");
+      return;
+    }
+
+    // Submit to Google Script
+    fetch(scriptURL, {
+      method: 'POST',
+      body: JSON.stringify({ name, roll: rollNo, vote }),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Network error');
+      votedRollNumbers.add(rollNo);
+      totalVotes++;
+      alert(`Thank you, ${name}!\nYou voted for: ${vote}`);
+      document.getElementById('voteCount').textContent = `Votes submitted: ${totalVotes} / ${MAX_VOTES}`;
+      event.target.reset();
+      document.getElementById('otherCandidate').disabled = true;
+    })
+    .catch(error => {
+      console.error('Error!', error.message);
+      alert("Failed to submit your vote. Try again later.");
+    });
+  }
+</script>
+
+
+</body>
+</html>
